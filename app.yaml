@@ -10,4 +10,4 @@ libraries:
 
 handlers:
 - url: /.*
-  script: helloworld.application
+  script: app.application
