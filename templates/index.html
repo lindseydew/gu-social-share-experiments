@@ -1,12 +1,155 @@
+<head>
+    <link type="text/css" rel="stylesheet" href="//pasteup.guim.co.uk/0.0.3/css/pasteup.min.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <script src="http://static.guim.co.uk/static/3a21a6225712e7df59854c0749abc6cffcf00ef2/common/scripts/omniture-H.25.5.js"></script>
+</head>
 <body>
     <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=180444840287";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
-    <div class="fb-like-box" data-href="http://www.facebook.com/theguardian" data-colorscheme="light"
-         data-show-faces="true" data-header="true" data-stream="false" data-show-border="true"></div>
+    <style>
+        .optout-buttons{padding-top:10px;}
+        .facebook-header{width:290px;}
+        .facebook-like{display:none;}
+        .close-btn {
+            position: relative;
+            padding: 1px 3px;
+            top: -26px;
+            left: 284px;
+        }
+        .close-btn a {
+            font-size: 10px;
+            font-weight: bold;
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+    <script>
+    //anonymous function to load the sdk
+    $(document).ready(function() {
+        var isLoaded = false;
+            (function(d, s, id) {
+            //document.getElementById("test") = postClick
+            // Check for localStorage
+                function postClick(){
+                    console.log('in the post click')
+                    window.open('','_self','');
+                    window.close();
+                }
+                $(".close-btn").click(function(){
+                    var s = s_gi("guardiangudev-code");
+                    s.eVar7 = "facebook-like-box";
+                    s.eVar37 = "facebook-like-box-cancel";
+                    s.events = "event37";
+                    s.linkTrackVars = "eVar7,eVar37,events";
+                    s.linkTrackEvents = s.events;
+                    s.tl(true, "o","facebook-like-box");
+                    window.open('','_self','');
+                    window.close();
+                });
+                $(".notagain").click(function(){
+                    var s = s_gi("guardiangudev-code");
+                    s.eVar7 = "facebook-like-box";
+                    s.eVar37 = "facebook-like-box-not-again";
+                    s.events = "event37";
+                    s.linkTrackVars = "eVar7,eVar37,events";
+                    s.linkTrackEvents = s.events;
+                    s.tl(true, "o","facebook-like-box");
+                    setStorage();
+                    window.open('','_self','');
+                    window.close();
+
+                });
+                function setStorage() {
+                    if(hasStorage) {
+                        localStorage.setItem('optout', 1);
+                    }
+                };
+                var hasStorage = (function() {
+                    try {
+                        localStorage.setItem("xxx_localstorage_test", "xxx_localstorage_test");
+                        localStorage.removeItem("xxx_localstorage_test");
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }());
+
+                function getParameterByName(name) {
+                    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+                    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+                }
+                if (getParameterByName('post_id') != null) {
+                    //successful post
+                } else {
+                    console.log('unsuccessful post');
+                    window.open('','_self','');
+                    window.close();
+                }
+                if(optedOut()) {
+                    console.log('opted out')
+                    window.open('','_self','');
+                    window.close();
+                }
+                window.fbAsyncInit = function () {
+                    isLoaded = true;
+                    FB.init({
+                        appId      : '180444840287',                        // App ID from the app dashboard
+                        status     : true,                                 // Check Facebook Login status
+                        xfbml      : true
+                    });
+                    FB.Event.subscribe('edge.create', function (response) {
+                        var s = s_gi("guardiangudev-code");
+                        s.eVar7 = "facebook-like-box";
+                        s.eVar37 = "facebook-like-box-like";
+                        s.events = "event37";
+                        s.linkTrackVars = "eVar7,eVar37,events";
+                        s.linkTrackEvents = s.events;
+                        s.tl(true, "o","facebook-like-box");
+                        setTimeout(postClick, 600)
+                    });
+                    FB.Event.subscribe('edge.remove', function (response) {
+                        var s = s_gi("guardiangudev-code");
+                        s.eVar7 = "facebook-like-box";
+                        s.eVar37 = "facebook-like-box-unlike";
+                        s.events = "event37";
+                        s.linkTrackVars = "eVar7,eVar37,events";
+                        s.linkTrackEvents = s.events;
+                        s.tl(true, "o","facebook-like-box");
+                        setTimeout(postClick, 600)
+                    });
+                    $(".facebook-like").css("display", "block");
+                };
+
+                setTimeout(function(){
+                    if(!isLoaded){
+                        window.open('','_self','');
+                        window.close();
+                    }
+                }, 1000);
+
+                function optedOut(){
+                    return (hasStorage && localStorage.getItem('optout')!==null);
+                };
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/all.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+    });
+    </script>
+    <div class="facebook-like">
+        <div class="hd zone-border zone-border-medium facebook-header">
+            <h4 class="sub-heading">Like our Guardian Facebook Page</h4>
+            <span class="close-btn"><a href="#">X</a></span>
+        </div>
+        <div class="fb-like-box" data-href="http://www.facebook.com/theguardian" data-colorscheme="light"
+             data-show-faces="true" data-header="true" data-stream="false" data-show-border="true" data-ref="facebook-like-box">
+        </div>
+        <div class="optout-buttons">
+            <a href="#" class="notagain">Don't ask me again</a>
+        </div>
+    </div>
+
+
 </body>
