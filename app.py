@@ -14,7 +14,16 @@ class MainPage(webapp2.RequestHandler):
 
         self.response.out.write(template.render(template_values))
 
+class CtaPanel(webapp2.RequestHandler):
+
+    def get(self):
+        template = jinja_environment.get_template('cta.html')
+
+        template_values = {}
+
+        self.response.out.write(template.render(template_values))
 
 application = webapp2.WSGIApplication([
     ('/', MainPage),
+    ('/social/cta', CtaPanel)
 ], debug=True)
